@@ -1,0 +1,34 @@
+LE Audio Integration Strategy for Linux Kernel 5.15 
+1. Background
+The current platform is based on Linux kernel 5.15, which does not include native support for LE Audio (ISO transport layer). However, the userspace stack (BlueZ 5.86) expects ISO support from the kernel. To enable LE Audio, two possible approaches were evaluated.
+2. Approach 1: Adding LE Audio Patches Only
+This approach involves adding only ISO-related files such as iso.c and iso.h into the existing kernel.
+Technical Challenges
+- Missing Kernel APIs: ISO depends on APIs introduced after kernel 5.15.
+- Deep Dependency Chain: Requires updates in HCI, L2CAP, MGMT layers.
+- Compilation Issues: Undefined symbols and struct mismatches.
+- Runtime Instability: Potential crashes or data corruption.
+- Userspace Mismatch: BlueZ expects full ISO support, not partial implementation.
+Risks
+- High maintenance overhead
+- Difficult debugging
+- Unstable LE Audio behavior
+- Not aligned with upstream kernel design
+3. Approach 2: Controlled Bluetooth Subsystem Backport
+This approach involves backporting the Bluetooth subsystem from a newer kernel into the existing 5.15 kernel in a controlled and incremental manner.
+Key Activities
+- Identify ISO-related commits from upstream kernel
+- Cherry-pick commits step-by-step
+- Resolve dependencies incrementally
+- Integrate ISO, HCI, and MGMT updates
+- Validate functionality at each stage
+Advantages
+- Complete and consistent implementation
+- Compatibility with BlueZ 5.86
+- Reduced runtime issues
+- Maintainable and scalable solution
+- Aligned with upstream kernel architecture
+Challenges
+- Moderate development effort
+- Requires kernel expertise
+- Initial integration complexity
